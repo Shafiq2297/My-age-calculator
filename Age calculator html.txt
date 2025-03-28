@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 600;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .result h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        .result p {
+            font-size: 18px;
+            color: #34495e;
+            margin: 10px 0;
+        }
+        
+        .highlight {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Age Calculator</h1>
+        
+        <div class="input-group">
+            <label for="birthdate">Enter your date of birth:</label>
+            <input type="date" id="birthdate" name="birthdate">
+        </div>
+        
+        <button onclick="calculateAge()">Calculate Age</button>
+        
+        <div class="result" id="result">
+            <h2>Your Age</h2>
+            <p>You are <span id="years" class="highlight">0</span> years, <span id="months" class="highlight">0</span> months, and <span id="days" class="highlight">0</span> days old.</p>
+            <p>Your next birthday is in <span id="next-birthday" class="highlight">0</span> days.</p>
+            <p>You were born on a <span id="birthday-day" class="highlight">Sunday</span>.</p>
+        </div>
+        
+        <footer>
+            &copy; 2023 Age Calculator | Project by [Your Name]
+        </footer>
+    </div>
+
+    <script>
+        function calculateAge() {
+            const birthdateInput = document.getElementById('birthdate').value;
+            
+            if (!birthdateInput) {
+                alert('Please enter your date of birth');
+                return;
+            }
+            
+            const birthdate = new Date(birthdateInput);
+            const today = new Date();
+            
+            // Calculate age in years, months, and days
+            let years = today.getFullYear() - birthdate.getFullYear();
+            let months = today.getMonth() - birthdate.getMonth();
+            let days = today.getDate() - birthdate.getDate();
+            
+            // Adjust for negative months or days
+            if (days < 0) {
+                months--;
+                // Get the last day of the previous month
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            // Calculate days until next birthday
+            const nextBirthday = new Date(today.getFullYear(), birthdate.getMonth(), birthdate.getDate());
+            if (today > nextBirthday) {
+                nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+            }
+            
+            const timeUntilBirthday = nextBirthday - today;
+            const daysUntilBirthday = Math.ceil(timeUntilBirthday / (1000 * 60 * 60 * 24));
+            
+            // Get day of the week for birthdate
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const birthDayOfWeek = daysOfWeek[birthdate.getDay()];
+            
+            // Display results
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('next-birthday').textContent = daysUntilBirthday;
+            document.getElementById('birthday-day').textContent = birthDayOfWeek;
+            
+            // Show result section
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
